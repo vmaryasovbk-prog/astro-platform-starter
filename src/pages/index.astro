@@ -1,19 +1,98 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Markdown from '../components/Markdown.astro';
 
-const explainer = `
-An Astro website can go way beyond static pages - on the right platform.
+const metrics = [
+    { label: 'Сон', value: '7ч 42м', trend: '+9%', note: 'выше прошлой недели', color: 'text-emerald-300' },
+    { label: 'Шаги', value: '9 860', trend: '+14%', note: 'цель почти выполнена', color: 'text-cyan-300' },
+    { label: 'Пульс в покое', value: '61', trend: '-3 уд/м', note: 'улучшение восстановления', color: 'text-violet-300' },
+    { label: 'Вода', value: '2.1 л', trend: '+0.4 л', note: 'стабильная гидратация', color: 'text-blue-300' }
+];
 
-Netlify supports not only [Streaming SSR](https://docs.astro.build/en/guides/server-side-rendering/#html-streaming) and fast [Edge Middleware](https://docs.astro.build/en/guides/middleware/), but also [on-demand revalidation](https://www.netlify.com/blog/cache-tags-and-purge-api-on-netlify/) and [stale-while-revalidate](https://www.netlify.com/blog/swr-and-fine-grained-cache-control/). 
-Any page or data can be rebuilt only when needed, without site visitors ever getting a performance hit.
-`;
+const weeklyActivity = [62, 74, 55, 81, 67, 90, 77];
+const weekDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+
+const insights = [
+    'Лучшее окно тренировки — с 07:00 до 09:00: средний пульс в норме и выше продуктивность.',
+    'После 2 дней подряд со сном менее 7 часов снижается дневная активность на ~18%.',
+    'Самый высокий уровень энергии у тебя в дни с 8 000+ шагов и 2+ литрами воды.'
+];
 ---
 
-<Layout title="Welcome to Astro.">
-    <h1 class="mb-10">Netlify Platform Starter for Astro</h1>
-    <Markdown content={explainer} class="mb-10 text-lg" />
-    <p>
-        <a href="https://docs.netlify.com/frameworks/astro/" class="btn btn-lg sm:min-w-64">Read the Docs</a>
-    </p>
+<Layout title="PulseTrack — здоровье и активность">
+    <section class="space-y-6">
+        <p class="inline-flex px-3 py-1 text-xs font-semibold tracking-widest uppercase rounded-full bg-white/10 text-primary">PulseTrack Mini</p>
+        <h1 class="max-w-3xl">Твоя персональная аналитика здоровья и активности</h1>
+        <p class="max-w-3xl text-base text-white/80 sm:text-lg">
+            Отслеживай сон, шаги, пульс и гидратацию в одном месте. Мини-сайт собирает ключевые показатели, показывает тренды
+            и подсказывает, как улучшить самочувствие.
+        </p>
+    </section>
+
+    <section class="grid gap-4 mt-10 sm:grid-cols-2 xl:grid-cols-4">
+        {
+            metrics.map((metric) => (
+                <article class="p-5 border rounded-xl border-white/10 bg-white/5 backdrop-blur-sm">
+                    <p class="text-sm text-white/65">{metric.label}</p>
+                    <p class="mt-2 text-3xl font-semibold">{metric.value}</p>
+                    <p class={`mt-2 text-sm font-semibold ${metric.color}`}>{metric.trend}</p>
+                    <p class="text-xs text-white/65">{metric.note}</p>
+                </article>
+            ))
+        }
+    </section>
+
+    <section class="grid gap-6 mt-10 lg:grid-cols-[1.4fr_1fr]">
+        <article class="p-6 border rounded-2xl border-white/10 bg-black/20">
+            <h2 class="text-2xl">Активность за неделю</h2>
+            <p class="mt-2 text-sm text-white/70">Индекс дневной активности (шаги, калории, зоны пульса)</p>
+            <div class="grid items-end h-56 grid-cols-7 gap-3 mt-6">
+                {
+                    weeklyActivity.map((value, index) => (
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="relative w-full rounded-md bg-white/10 h-44">
+                                <div class="absolute bottom-0 w-full rounded-md bg-primary" style={`height: ${value}%`} />
+                            </div>
+                            <span class="text-xs text-white/70">{weekDays[index]}</span>
+                        </div>
+                    ))
+                }
+            </div>
+        </article>
+
+        <article class="p-6 border rounded-2xl border-white/10 bg-black/20">
+            <h2 class="text-2xl">Статистика месяца</h2>
+            <ul class="mt-4 space-y-4 text-sm">
+                <li class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                    <span>Средний сон</span>
+                    <strong>7ч 28м</strong>
+                </li>
+                <li class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                    <span>Активные дни</span>
+                    <strong>24 / 30</strong>
+                </li>
+                <li class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                    <span>Сожжено ккал</span>
+                    <strong>18 420</strong>
+                </li>
+                <li class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                    <span>Тренировки</span>
+                    <strong>17</strong>
+                </li>
+            </ul>
+        </article>
+    </section>
+
+    <section class="p-6 mt-10 border rounded-2xl border-primary/30 bg-primary/10">
+        <h2 class="text-2xl">Умные инсайты</h2>
+        <ul class="mt-4 space-y-3 text-sm sm:text-base text-white/90">
+            {
+                insights.map((insight) => (
+                    <li class="flex gap-3">
+                        <span class="mt-1.5 size-2 rounded-full bg-primary" />
+                        <span>{insight}</span>
+                    </li>
+                ))
+            }
+        </ul>
+    </section>
 </Layout>
